@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { IncomeComponent } from './income/income.component';
 
 const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {path: 'login',component:LoginComponent},
   {path: 'side-nav',component:SideNavComponent},
   {path: 'dashboard',component:DashboardComponent},
