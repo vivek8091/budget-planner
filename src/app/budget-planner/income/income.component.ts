@@ -11,24 +11,24 @@ import { Router } from '@angular/router';
   styleUrl: './income.component.scss'
 })
 export class IncomeComponent {
-  incomeForm:any;
-  selectedMonth:any;
-  monthSelected:boolean = false;
+  incomeForm: any;
+  selectedMonth: any;
+  monthSelected: boolean = false;
   januaryIncome: any[] = [
-    { source: 'Salary', amount: 5000, investments: '401(k)'},
-    { source: 'Freelancing', amount: 1000, investments: 'Stocks'},
+    { source: 'Salary', amount: 5000, investments: '401(k)' },
+    { source: 'Freelancing', amount: 1000, investments: 'Stocks' },
   ];
   februaryIncome: any[] = [
-    { source: 'Salary', amount: 5500, investments: '401(k)'},
-    { source: 'Rental Income', amount: 700, investments: 'Real Estate'},
+    { source: 'Salary', amount: 5500, investments: '401(k)' },
+    { source: 'Rental Income', amount: 700, investments: 'Real Estate' },
   ];
   marchIncome: any[] = [
-    { source: 'Salary', amount: 5200, investments: '401(k)'},
-    { source: 'Freelancing', amount: 1200, investments: 'Stocks'},
-    { source: 'Rental Income', amount: 600, investments: 'Real Estate'},
+    { source: 'Salary', amount: 5200, investments: '401(k)' },
+    { source: 'Freelancing', amount: 1200, investments: 'Stocks' },
+    { source: 'Rental Income', amount: 600, investments: 'Real Estate' },
   ];
 
-  constructor(public fb: FormBuilder){
+  constructor(public fb: FormBuilder, public router: Router) {
     const currentDate = new Date();
     this.selectedMonth = currentDate.toLocaleString('default', { month: 'long' });
   }
@@ -41,9 +41,9 @@ export class IncomeComponent {
     })
   }
 
-  onChange(event: any){
+  onChange(event: any) {
     this.selectedMonth = event.target.value;
-    this.monthSelected=true;
+    this.monthSelected = true;
     this.getFilteredIncomes();
   }
 
@@ -59,35 +59,62 @@ export class IncomeComponent {
     switch (month) {
       case 'January':
         return this.januaryIncome;
-        case 'February':
+      case 'February':
         return this.februaryIncome;
-        case 'March':
+      case 'March':
         return this.marchIncome;
-    
+
       default:
-        return[];
+        return [];
     }
   }
 
-  getFilteredIncomes(){
-    let filteredIncomes:any[] = [];
+  getFilteredIncomes() {
+    let filteredIncomes: any[] = [];
     switch (this.selectedMonth) {
       case 'January':
         filteredIncomes = [...this.januaryIncome];
         break;
-        case 'February':
-          filteredIncomes = [...this.februaryIncome];
-          break;
-        case 'March':
-          filteredIncomes = [...this.marchIncome];
-          break;
+      case 'February':
+        filteredIncomes = [...this.februaryIncome];
+        break;
+      case 'March':
+        filteredIncomes = [...this.marchIncome];
+        break;
       default:
         break;
     }
     return filteredIncomes;
   }
 
-  onSubmit(){
+  onSubmit() {
+    if (this.incomeForm.valid) {
+      const newIncome = this.incomeForm.value;
+      switch (this.selectedMonth) {
+        case 'January':
+          this.januaryIncome.push(newIncome);
+          break;
+        case 'February':
+          this.februaryIncome.push(newIncome);
+          break;
+        case 'March':
+          this.marchIncome.push(newIncome);
+          break;
+
+        default:
+          break;
+      }
+      this.incomeForm.reset();
+      this.incomeForm.patchValue({ month: '', source: '', amount: '', investments: ''});
+    }
+  }
+
+  onBack() {
+    this.router.navigate(['/budget-planner/dashboard']);
+  }
+
+  saveForm() {
+    console.log("Form saved!");
 
   }
 }
